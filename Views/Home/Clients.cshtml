@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Клиенты";
+}
+
+<main>
+
+    <h1>Управление клиентами</h1>
+
+    <section class="w-100 pt-4 pb-4 d-flex">
+        <div class="col-6">
+            <div class="input-group">
+                <input type="search" class="form-control" id="searchInput" placeholder="Найти" aria-label="Search" aria-describedby="search-addon">
+            </div>
+        </div>
+    </section>
+
+    <table class="" id="customersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Серия паспорта</th>
+                <th>Номер паспорта</th>
+                <th>Предпочтения</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            <!-- Таблица будет заполнена данными из Ajax-запроса -->
+        </tbody>
+    </table>
+</main>
+@section scripts {
+    @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
+    @Scripts.Render("~/Scripts/jquery.dataTables.min.js")
+<script>
+    $(document).ready(function () {
+        $.ajax({
+        url: '@Url.Action("GetClientsData", "Home")',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var jsonData = JSON.parse(data);
+
+            $('#customersTable').DataTable({
+                data: jsonData,
+                columns: [
+                    { data: 'Id' },
+                    { data: 'Name' },
+                    { data: 'Surname' },
+                    { data: 'Lastname' },
+                    { data: 'Email' },
+                    { data: 'Phone' },
+                    { data: 'Passportseries' },
+                    { data: 'Passportnumber' },
+                    { data: 'Prefers' }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ru.json',
+                },
+                searching: false,
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
+    });
+
+        $("#searchInput").on("input", function () {
+            var searchQuery = $(this).val().toLowerCase();
+            var tableRows = $('#customersTable tbody tr');
+
+            tableRows.each(function () {
+                var row = $(this);
+                var rowData = row.text().toLowerCase();
+
+                if (rowData.includes(searchQuery)) {
+                    row.show();
+                } else {
+                    row.hide();
+                }
+            });
+        });
+    });
+</script>
+}
