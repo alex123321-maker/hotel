@@ -28,20 +28,20 @@
                     <div class="flex-row p-3 logo fs-3">Royal Palace Inn</div>
                     <br />
                     <br />
-                    <div class="flex-row active p-3 ">
-                        Бронирования
+                    <div class="flex-row p-3 @(ViewBag.ActiveTab == "bookings" ? "active" :"")  ">
+                        @Html.ActionLink("Бронирования","Index","Home")
                     </div>
-                    <div class="flex-row p-3 ">
-                        Клиенты
+                    <div class="flex-row p-3 @(ViewBag.ActiveTab == "clients" ? "active" :"")">
+                        @Html.ActionLink("Клиенты", "Clients", "Home")
                     </div>
-                    <div class="flex-row p-3 ">
-                        Услуги
+                    <div class="flex-row p-3 @(ViewBag.ActiveTab == "services" ? "active" :"")">
+                        @Html.ActionLink("Услуги", "Services", "Home")
                     </div>
-                    <div class="flex-row p-3 ">
-                        Скидки
+                    <div class="flex-row p-3 @(ViewBag.ActiveTab == "discount" ? "active" :"")">
+                        @Html.ActionLink("Скидки", "Discount", "Home")
                     </div>
-                    <div class="flex-row p-3 ">
-                        Номера
+                    <div class="flex-row p-3 @(ViewBag.ActiveTab == "rooms" ? "active" :"")">
+                        @Html.ActionLink("Номера", "Rooms", "Home")
                     </div>
                 </div>
             </div>

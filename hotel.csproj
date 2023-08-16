@@ -487,6 +487,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Clients.cshtml" />
     <Content Include="Views\Home\Services.cshtml" />
+    <Content Include="Views\Home\Discount.cshtml" />
+    <Content Include="Views\Home\Rooms.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
