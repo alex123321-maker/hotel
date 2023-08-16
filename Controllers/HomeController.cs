@@ -34,6 +34,27 @@ namespace hotel.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Services()
+        {
+            ViewBag.ActiveTab = "services";
+
+            return View();
+        }
+
+        public ActionResult Discount()
+        {
+            ViewBag.ActiveTab = "discount";
+
+            return View();
+        }
+
+        public ActionResult Rooms()
+        {
+            ViewBag.ActiveTab = "rooms";
+
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
