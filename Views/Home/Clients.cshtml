@@ -1,18 +1,90 @@
 ﻿@{
     ViewBag.Title = "Клиенты";
 }
+<div aria-live="assertive" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+    <div class="toast-container position-fixed p-3 end-0 " id="toastPlacement">
+        <div class="toast  text-white">
+            <div class="toast-header ">
+                
+            </div>
+            <div class="toast-body">
 
+            </div>
+        </div>
+    </div>
+</div>
 <main>
 
     <h1>Управление клиентами</h1>
 
-    <section class="w-100 pt-4 pb-4 d-flex">
+    <section class="row w-100 pt-4 pb-4 d-flex">
         <div class="col-6">
             <div class="input-group">
                 <input type="search" class="form-control" id="searchInput" placeholder="Найти" aria-label="Search" aria-describedby="search-addon">
             </div>
         </div>
+        <button type="button" class="btn btn-primary col-2" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+            Добавить
+        </button>
+        <button id="deliteButton" onclick="deliteSelected()" type="button" class="btn btn-primary col-2 ms-3">
+            Удалить
+        </button>
+
     </section>
+
+    <!--Модальное окно -->
+    <div class="modal fade " id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-model="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Добавление нового клиента</h1>
+                    <button id="clearButton" type="button" aria-label="Обновить" onclick="clearFields()" class="btn"><i class="gg-sync"></i></button>
+                </div>
+                <form id="myForm" class="was-validated">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col">
+                                <input type="text" id="Name" class="form-control" placeholder="Имя" aria-label="Name" required>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Surname" class="form-control" placeholder="Фамилия" aria-label="Surname" required>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Lastname" class="form-control" placeholder="Отчество" aria-label="Lastname">
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 mb-3">
+                            <div class="col">
+                                <input type="number" id="Passportseries" class="form-control" placeholder="Серия пасспорта" aria-label="Passportseries" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" id="Passportnumber" class="form-control" placeholder="Номер пасспорта" aria-label="Passportnumber" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 mb-3">
+                            <div class="col">
+                                <input type="email" id="Email" class="form-control" placeholder="Электронная почта" aria-label="Email">
+                            </div>
+                            <div class="col">
+                                <input type="tel" id="Phone" class="form-control" placeholder="Номер телефона" aria-label="Phone" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlTextarea1" class="form-label">Предпочтения клиента</label>
+                                <textarea class="form-control " id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Понял</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
 
     <table class="order-column row-border compact hover" id="customersTable">
         <thead>
@@ -32,58 +104,18 @@
             <!-- Таблица будет заполнена данными из Ajax-запроса -->
         </tbody>
     </table>
+    
 </main>
 @section scripts {
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.js"></script>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
     @Scripts.Render("~/Scripts/jquery.dataTables.min.js")
-<script>
-    $(document).ready(function () {
-        $.ajax({
-        url: '@Url.Action("GetClientsData", "Home")',
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            var jsonData = JSON.parse(data);
-
-            $('#customersTable').DataTable({
-                data: jsonData,
-                columns: [
-                    { data: 'Id' },
-                    { data: 'Name' },
-                    { data: 'Surname' },
-                    { data: 'Lastname' },
-                    { data: 'Email' },
-                    { data: 'Phone' },
-                    { data: 'Passportseries' },
-                    { data: 'Passportnumber' },
-                    { data: 'Prefers' }
-                ],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ru.json',
-                },
-                searching: false,
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-        }
-    });
-
-        $("#searchInput").on("input", function () {
-            var searchQuery = $(this).val().toLowerCase();
-            var tableRows = $('#customersTable tbody tr');
-
-            tableRows.each(function () {
-                var row = $(this);
-                var rowData = row.text().toLowerCase();
-
-                if (rowData.includes(searchQuery)) {
-                    row.show();
-                } else {
-                    row.hide();
-                }
-            });
-        });
-    });
-</script>
+    <script>
+        let url = '@Url.Action("GetClientsData", "Home")'
+        let urlCreateClient ='@Url.Action("CreateClient", "Home")'
+    </script>
+    @Scripts.Render("~/Scripts/datatable.js")
 }
