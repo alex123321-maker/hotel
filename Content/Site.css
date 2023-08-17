@@ -48,5 +48,7 @@ a {
     border-radius:10px !important;
 }
 
-
+table{
+    word-break:break-all;
+}
 

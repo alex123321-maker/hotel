@@ -7,6 +7,7 @@ $(document).ready(function () {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ru.json',
         },
         searching: false,
+        scrollY: 600,
         select: {
             toggleable: true
         },
@@ -102,13 +103,19 @@ function getClients() {
 
 function deliteSelected() {
     const selectedRows = dataTableInstance.rows({ selected: true }).data();
+    if (selectedRows.length == 0) {
+        showToast("Выберите хотя бы одну строку", false)
+    }
+    else {
 
-    for (let i = 0; i < selectedRows.length; i++) {
+        for (let i = 0; i < selectedRows.length; i++) {
         const selectedRow = selectedRows[i];
         const selectedId = selectedRow.Id;
 
         deleteClient(selectedId);
+        }
     }
+
 }
 
 function clearFields() {

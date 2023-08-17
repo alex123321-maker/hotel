@@ -5,7 +5,7 @@
     <div class="toast-container position-fixed p-3 end-0 " id="toastPlacement">
         <div class="toast  text-white">
             <div class="toast-header ">
-                
+
             </div>
             <div class="toast-body">
 
@@ -89,14 +89,14 @@
     <table class="order-column row-border compact hover" id="customersTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th width="30">ID</th>
                 <th>Имя</th>
                 <th>Фамилия</th>
                 <th>Отчество</th>
                 <th>Email</th>
-                <th>Телефон</th>
-                <th>Серия паспорта</th>
-                <th>Номер паспорта</th>
+                <th width="100">Телефон</th>
+                <th width="90">Серия</th>
+                <th width="90">Номер</th>
                 <th>Предпочтения</th>
             </tr>
         </thead>
@@ -104,12 +104,12 @@
             <!-- Таблица будет заполнена данными из Ajax-запроса -->
         </tbody>
     </table>
-    
+
 </main>
 @section scripts {
-    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
 
-    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
     @Scripts.Render("~/Scripts/jquery.dataTables.min.js")
