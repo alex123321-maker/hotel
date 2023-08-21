@@ -13,19 +13,17 @@ namespace hotel.Models
         public int Id { get; set; }
 
         [ForeignKey("Customer")]
-        public string CustomerId { get; set; }
-        public virtual ApplicationUser Customer { get; set; }
+        public int CustomerId { get; set; }
+        public virtual CustomerModels Customer { get; set; }
 
         [ForeignKey("Room")]
         public int RoomNumber { get; set; }
         public virtual RoomModel Room { get; set; }
 
-        [ForeignKey("Admin")]
         public string AdminId { get; set; }
-        public virtual ApplicationUser Admin { get; set; }
 
         [ForeignKey("Discount")]
-        public int? DiscountId { get; set; } // Nullable, as there might be no discount
+        public int DiscountId { get; set; } // Nullable, as there might be no discount
         public virtual DiscountModel Discount { get; set; }
 
         [ForeignKey("Status")]

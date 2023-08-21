@@ -29,5 +29,19 @@ namespace hotel.Models
         {
             return new ApplicationDbContext();
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityUserRole>()
+                .HasKey(r => new { r.UserId, r.RoleId })
+                .ToTable("AspNetUserRoles");
+
+            modelBuilder.Entity<IdentityUserLogin>()
+                        .HasKey(l => new { l.LoginProvider, l.ProviderKey, l.UserId })
+                        .ToTable("AspNetUserLogins");
+        }
+
     }
 }
