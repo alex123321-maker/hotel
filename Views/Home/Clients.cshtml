@@ -55,10 +55,10 @@
                         </div>
                         <div class="row g-3 mt-3 mb-3">
                             <div class="col">
-                                <input type="number" id="Passportseries" class="form-control" placeholder="Серия пасспорта" aria-label="Passportseries" required>
+                                <input type="text" id="Passportseries" class="form-control" placeholder="Серия пасспорта" maxlength="4" aria-label="Passportseries" required>
                             </div>
                             <div class="col">
-                                <input type="number" id="Passportnumber" class="form-control" placeholder="Номер пасспорта" aria-label="Passportnumber" required>
+                                <input type="text" id="Passportnumber" class="form-control" placeholder="Номер пасспорта" maxlength="6" aria-label="Passportnumber" required>
                             </div>
                         </div>
                         <div class="row g-3 mt-3 mb-3">
@@ -78,7 +78,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-primary">Понял</button>
+                        <button type="submit" class="btn btn-primary">Добавить</button>
                     </div>
                 </form>
 
@@ -112,10 +112,24 @@
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
-    @Scripts.Render("~/Scripts/jquery.dataTables.min.js")
-    <script>
+<script>
+        let scrollYcur = 600
         let url = '@Url.Action("GetClientsData", "Home")'
-        let urlCreateClient ='@Url.Action("CreateClient", "Home")'
-    </script>
+        let urlCreateClient = '@Url.Action("CreateClient", "Home")'
+        let urlDelite = '@Url.Action("DeleteClient","Home")' + '/'
+        let dtColumns = [
+            { data: 'Id' },
+            { data: 'Name' },
+            { data: 'Surname' },
+            { data: 'Lastname' },
+            { data: 'Email' },
+            { data: 'Phone' },
+            { data: 'Passportseries' },
+            { data: 'Passportnumber' },
+            { data: 'Prefers' }
+    ]
+    
+    
+</script>
     @Scripts.Render("~/Scripts/datatable.js")
 }

@@ -52,3 +52,58 @@ table{
     word-break:break-all;
 }
 
+td, th {
+    text-align: center;
+    vertical-align: middle;
+}
+.hidden-column{
+    display:none;
+}
+
+#autocompleteList {
+    max-height: 150px;
+    position: relative;
+    overflow: auto;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.new-client-btn {
+    width: 100%;
+    border-radius: 0 !important;
+}
+
+.dateDay {
+    font-size: 10px;
+    padding-top: 0px;
+    margin: 0;
+}
+
+.month {
+    font-size: 10px;
+    text-align: center;
+}
+
+/* Класс для ячейки с 1 */
+.cell-red {
+    background-color: red;
+    color: red;
+    font-size: 0;
+}
+
+/* Класс для ячейки с 0 */
+.cell-green {
+    background-color: green;
+    color: green;
+    font-size: 0;
+}
+
+td {
+    user-select: none;
+}
+
+.no-select {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

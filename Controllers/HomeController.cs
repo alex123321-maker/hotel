@@ -1,4 +1,5 @@
 ﻿using hotel.Models;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,28 @@ namespace hotel.Controllers
     public class HomeController : Controller
     {
         ModelsContext db = new ModelsContext();
+
         public ActionResult Index()
         {
+            string userId = User.Identity.GetUserId();
+            ViewBag.Discounts = JsonConvert.SerializeObject(db.Discounts.ToList());
+            // Теперь у вас есть ID текущего авторизованного пользователя
+            ViewBag.CurrentUserId = userId;
             ViewBag.ActiveTab = "bookings";
+            var RoomTypes = db.RoomTypes.ToList();
+            HashSet<string> types = new HashSet<string>();
+            HashSet<int> caps = new HashSet<int>();
+            foreach (var RoomType in RoomTypes)
+            {
+                types.Add(RoomType.Type);
+                caps.Add(RoomType.Capacity);
+            }
+            ViewBag.RoomTypes = types;
+            ViewBag.Caps = caps;
+
+            ViewBag.Rooms = JsonConvert.SerializeObject(db.Rooms.ToList());
+
+            ViewBag.Clients = JsonConvert.SerializeObject(db.Customers.ToList());
 
             return View();
         }
@@ -30,6 +50,16 @@ namespace hotel.Controllers
             var clientsData = db.Customers.ToList();
 
             var json = JsonConvert.SerializeObject(clientsData);
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetReservations()
+        {
+            var reservData = db.Reservations.ToList();
+           
+
+            var json = JsonConvert.SerializeObject(reservData);
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
@@ -51,7 +81,47 @@ namespace hotel.Controllers
         }
 
 
-        [HttpPost] // Добавьте этот атрибут, чтобы указать, что метод принимает данные через POST запрос
+        public ActionResult DeleteReservation(int id)
+        {
+            var reserv = db.Reservations.Find(id);
+
+            if (reserv != null)
+            {
+                db.Reservations.Remove(reserv);
+                db.SaveChanges();
+                return Json(new { success = true, message = "Запись успешно удалена." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Запись не найдена." });
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult CreateReservation(ReservationModel reservation) // Принимайте объект Customer как параметр
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Reservations.Add(reservation);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Запись успешно добавлена." });
+                }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                    return Json(new { success = false, message = "Ошибка валидации: " + string.Join(", ", errors) });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Ошибка при добавлении записи: " + ex.Message });
+            }
+        }
+
+        [HttpPost] 
         public JsonResult CreateClient(CustomerModels customer) // Принимайте объект Customer как параметр
         {
             try
@@ -77,7 +147,6 @@ namespace hotel.Controllers
         public ActionResult Services()
         {
             ViewBag.ActiveTab = "services";
-
             return View();
         }
 

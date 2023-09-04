@@ -1,27 +1,18 @@
-﻿var dataTableInstance;
-
-$(document).ready(function () {
+﻿
+var dataTableInstance;
+const currentDate = new Date();
+$(function () {
 
     dataTableInstance = $('#customersTable').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ru.json',
         },
         searching: false,
-        scrollY: 600,
+        scrollY: scrollYcur,
         select: {
             toggleable: true
         },
-        columns: [
-            { data: 'Id'},
-            { data: 'Name' },
-            { data: 'Surname' },
-            { data: 'Lastname' },
-            { data: 'Email' },
-            { data: 'Phone' },
-            { data: 'Passportseries' },
-            { data: 'Passportnumber' },
-            { data: 'Prefers' }
-        ]
+        columns: dtColumns
     });
 
     getClients();
@@ -42,6 +33,38 @@ $(document).ready(function () {
         });
     });
 
+    $('input[type=radio][name=btnradio]').on('change', function () {
+        
+        let filterStartDate = new Date(); // По умолчанию - сегодня
+        switch ($(this).attr('id')) {
+            case "btnradio1":
+                
+
+                filterReserv(currentDate);
+                break;
+            case "btnradio2":
+                filterStartDate.setDate(currentDate.getDate() - 7)
+                filterReserv(filterStartDate);
+                break;
+            case "btnradio3":
+                filterStartDate.setMonth(currentDate.getMonth() - 1);
+                filterReserv(filterStartDate);
+                break;
+            case "btnradio4":
+                filterStartDate.setFullYear(currentDate.getFullYear() - 1); 
+                filterReserv(filterStartDate);
+                break;
+            case "btnradio5":
+                filterStartDate.setFullYear("2000"); 
+                filterReserv(filterStartDate);
+                break;
+            // Добавьте другие условия по вашему усмотрению
+            default:
+                break;
+
+        };
+        
+    });
     $("#myForm").on("submit", function (event) {
         event.preventDefault(); // Отменяем стандартное поведение формы (перезагрузка страницы)
 
@@ -56,7 +79,7 @@ $(document).ready(function () {
             Phone: $("#Phone").val(),
             Prefers: $("#exampleFormControlTextarea1").val()
         };
-
+        console.log(formData);
         // Отправка данных на сервер
         $.ajax({
             url: urlCreateClient,
@@ -64,6 +87,7 @@ $(document).ready(function () {
             data: JSON.stringify(formData), // Отправляем данные как JSON
             contentType: 'application/json', // Указываем, что отправляем JSON
             success: function (response) {
+                
                 // Обработка успешного ответа
                 console.log("Запись успешно создана:", response);
                 clearFields();
@@ -88,11 +112,11 @@ function getClients() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            
             var jsonData = JSON.parse(data);
-
+            
             // Очищаем и обновляем данные в таблице
             dataTableInstance.clear().rows.add(jsonData).draw();
-
             
         },
         error: function (xhr, status, error) {
@@ -109,10 +133,11 @@ function deliteSelected() {
     else {
 
         for (let i = 0; i < selectedRows.length; i++) {
-        const selectedRow = selectedRows[i];
-        const selectedId = selectedRow.Id;
+            const selectedRow = selectedRows[i];
+            const selectedId = selectedRow.Id;
 
-        deleteClient(selectedId);
+            console.log(selectedRow, selectedId);
+            deleteClient(selectedId);
         }
     }
 
@@ -134,7 +159,7 @@ function clearFields() {
 
 function deleteClient(id) {
     $.ajax({
-        url: '/Home/DeleteClient/' + id,
+        url: urlDelite + id,
         type: 'POST',
         dataType: 'json',
         success: function (response) {
@@ -191,3 +216,16 @@ function showToast(message, success) {
     bsToast.show(); // Показываем тост
 }
 
+function filterReserv(filterStartDate) {
+        var tableRows = $('#customersTable tbody tr');
+        tableRows.each(function () {
+            const row = $(this);
+            const hiddenColumnDate = new Date(row.find(".hidden-column").text());
+
+            if (hiddenColumnDate >= filterStartDate) {
+                row.show();
+            } else {
+                row.hide();
+            }
+        });
+    };

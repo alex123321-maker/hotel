@@ -2,11 +2,27 @@
     ViewBag.Title = "Бронирования";
 }
 
-<main class="text-start">
+
+
+
+<div aria-live="assertive" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+    <div class="toast-container position-fixed p-3 end-0 " id="toastPlacement">
+        <div class="toast  text-white">
+            <div class="toast-header ">
+
+            </div>
+            <div class="toast-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<main>
+
     <h1>Бронирования</h1>
     <div class="row pt-3 z-0">
         <div class="col-6 btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
             <label class="btn btn-outline-primary" for="btnradio1">Сегодня</label>
 
             <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
@@ -16,52 +32,220 @@
             <label class="btn btn-outline-primary" for="btnradio3">За месяц</label>
             <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
             <label class="btn btn-outline-primary" for="btnradio4">За год</label>
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" checked>
             <label class="btn btn-outline-primary" for="btnradio5">За всё время</label>
         </div>
     </div>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
 
-    <br />
-    <br />
-    <br />
-    <br />
+    <section class="row w-100 pt-4 pb-4 d-flex">
+        <div class="col-6">
+            <div class="input-group">
+                <input type="search" class="form-control" id="searchInput" placeholder="Найти" aria-label="Search" aria-describedby="search-addon">
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary col-2" data-bs-toggle="modal"  data-bs-target="#exampleModalCenter">
+            Добавить
+        </button>
+        <button id="deliteButton" onclick="deliteSelected()" type="button" class="btn btn-primary col-2 ms-3">
+            Удалить
+        </button>
 
-    <br />
-    <br />
-    <br />
-    <br />
+    </section>
 
-    <br />
-    <br />
-    <br />
+    <!--Модальное окно -->
+    <div class="modal fade " id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-model="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Добавление нового бронирования</h1>
+                </div>
+                <form id="reservForm">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col">
+                                <input type="text" id="clientInput" autocomplete="off" class="form-control" placeholder="Клиент" aria-label="Client" required>
+                                <ul class="dropdown-menu mt-1 dropdown-menu-right" id="autocompleteList">
+                                    <li><button class="new-client-btn btn btn-outline-primary">Добавить клиента</button></li>
+                                </ul>
+                            </div>
 
-    <br />
-    <br />
-    <br />
-    <br />
+                        </div>
+                        <div class="row g-3 mt-3 mb-3">
+                            <div class="col">
+                                <select class="form-select" aria-label="room type" id="roomTypeFilter">
+                                    <option selected>Тип комнаты</option>
+                                    @foreach (var roomType in ViewBag.RoomTypes)
+                                    {
+                                        <option value="@roomType">@roomType</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select class="form-select" aria-label="room capacity" id="roomCapsFilter">
+                                    <option selected>Вместимость комнат</option>
+                                    @foreach (var el in ViewBag.Caps)
+                                    {
+                                        <option value="@el">@el</option>
 
-    <br />
-    <br />
-    <br />
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 mb-3">
+                            <div class="col form-outline">
+                                <label class="form-label" for="roomInput">Номер</label>
+                                <input class="form-control" id="roomInput" type="number" placeholder="Номер" required disabled>
+                            </div>
+                            <div class="col form-outline">
+                                <label class="form-label" for="checkInDateinput">Дата заезда</label>
+                                <input class="form-control"
+                                       id="checkInDateinput"
+                                       type="text"
+                                       value="-"
+                                       aria-label="checkindate"
+                                       required
+                                       disabled />
+                            </div>
+                            <div class="col form-outline">
+                                <label class="form-label" for="checkOutDateinput">Дата выезда</label>
+                                <input class="form-control"
+                                       id="checkOutDateinput"
+                                       type="text"
+                                       value="-"
+                                       aria-label="checkoutdate"
+                                       required
+                                       disabled />
+                            </div>
 
-    <br />
-    <br /><br />
+                        </div>
+                        <div class="row g-3 mt-3 ">
+                            <table id="roomsTable" class=" cell-border" width="100%">
+                                <thead>
+                                    <tr>
 
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
+                                        <th rowspan="2">Тип</th>
+                                        <th rowspan="2">Вместимость</th>
+                                        <th rowspan="2">Номер</th>
 
-    <br />
-    <br />
-    <br />
-    <br />
+                                    </tr>
+
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <table class="order-column row-border compact hover" id="customersTable">
+        <thead>
+            <tr>
+                <th class="text-center" width="30">ID</th>
+                <th class="text-center" width="300">Клиент</th>
+                <th class="text-center" width="150">Номер</th>
+                <th class="text-center" width="100">Тип</th>
+                <th class="text-center" width="150">Вместимость</th>
+                <th class="text-center">Администратор</th>
+                <th class="text-center" width="150">Статус</th>
+                <th class="text-center" width="120">Дата<br />заселения</th>
+                <th class="text-center" width="120">Дата<br />выселения</th>
+                <th class="d-none">CreatedDate</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            <!-- Таблица будет заполнена данными из Ajax-запроса -->
+        </tbody>
+    </table>
 
 </main>
+@section scripts {
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+
+    <script>
+        let url = '@Url.Action("GetReservations", "Home")'
+        let urlCreateClient = '@Url.Action("CreateReservation", "Home")'
+        let urlDelite = '@Url.Action("DeleteReservation","Home")'+'/'
+        let scrollYcur = 500
+        let dtColumns = [
+            { data: 'Id' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `${data.Customer.Surname} ${data.Customer.Name} ${data.Customer.Lastname}`;
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `${data.Room.RoomNumber}`;
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `${data.Room.RoomType.Type}`;
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `${data.Room.RoomType.Capacity}`;
+                }
+            },
+            { data: 'AdminId' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return data.Status.Title;
+                } },
+            {
+                data: 'CheckInDate',
+                render: function (data, type, row) {
+                    return data.split('T')[0];
+                }
+            },
+            {
+                data: 'CheckOutDate',
+                render: function (data, type, row) {
+                    return data.split('T')[0];
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<span class="hidden-column">${data.CreatedDate}</span>`;
+                }
+}
+        ]
+
+        let formdata = {
+            CustomerId: "",
+            RoomNumber: "",
+            AdminId: "@ViewBag.CurrentUserId",
+            DiscountId: "",
+            StatusId: "Ожидание подтверждения",
+            CheckInDate: "",
+            CheckOutDate: "",
+    };
+        const rooms = JSON.parse('@Html.Raw(ViewBag.Rooms)');
+        const clients = JSON.parse('@Html.Raw(ViewBag.Clients)');
+        const discounts = JSON.parse('@Html.Raw(ViewBag.Discounts)');
+    </script>
+    @Scripts.Render("~/Scripts/datatable.js")
+    @Scripts.Render("~/Scripts/autocomplite.js")
+    @Scripts.Render("~/Scripts/roomsTable.js")
+
+}

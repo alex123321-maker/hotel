@@ -32,5 +32,12 @@ namespace hotel.Models
 
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+
+        public ReservationModel()
+        {
+            CreatedDate = DateTime.Now; // Устанавливаем текущую дату и время при создании объекта
+        }
     }
+
 }

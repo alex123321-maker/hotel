@@ -167,9 +167,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202308211249415_InitialCreate.cs" />
-    <Compile Include="Migrations\202308211249415_InitialCreate.designer.cs">
-      <DependentUpon>202308211249415_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202308220840072_Adder.cs" />
+    <Compile Include="Migrations\202308220840072_Adder.designer.cs">
+      <DependentUpon>202308220840072_Adder.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -364,12 +364,14 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\autocomplite.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\roomsTable.js" />
     <Content Include="Scripts\datatable.js" />
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
@@ -529,8 +531,8 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202308211249415_InitialCreate.resx">
-      <DependentUpon>202308211249415_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202308220840072_Adder.resx">
+      <DependentUpon>202308220840072_Adder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
