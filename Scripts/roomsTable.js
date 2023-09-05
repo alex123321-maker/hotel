@@ -264,147 +264,9 @@ $(function () {
                 
 
                 var tableData = Object.values(data);
+                table.rows.add(tableData).draw();
                 
                 
-                
-                table = new DataTable('#roomsTable', {
-                    data: tableData,
-                    paging: false,
-                   
-                    searching: false,
-                    columns: cols,
-                    scrollY: 350,
-                    select: {
-                        style: 'multi',
-                        selector: 'td:not(.no-select)',
-                        items: 'cell'
-                    },
-                    dom: 'Bfrtip', // Добавляем кнопки в DOM
-                    buttons: [
-                        {
-                            text: 'Неделя назад',
-                            className: 'btn btn-primary clicked',
-                            action: function () {
-                                shiftWeekBackward();
-                            }
-                        },
-                        {
-                            text: 'Неделя вперёд',
-                            className: 'btn btn-primary clicked',
-                            action: function () {
-                                shiftWeekForward();
-                            }
-                        }
-                    ]
-                });
-                table.select.style('api');
-                table.off('click', 'td');
-                table.on('click', 'td', function (e) {
-                    var curCell = table.cell(e.target);
-                    if (curCell.selected()) {
-                        curCell.deselect();
-                        var cols = [];
-                        var cols1 = [];
-                        var selectedCells = table.cells({ selected: true });
-                        selectedCells.every(function () { if (this.index().column < curCell.index().column) { cols.push(this.index()); } else { cols1.push(this.index()); }; });
-                        if ((selectedCells.count() / 2) < (selectedCells.count() - cols.length)) {
-                            cols.forEach((el) => { table.cell(el.row, el.column).deselect(); });
-
-                        }
-                        else {
-                            cols1.forEach((el) => { table.cell(el.row, el.column).deselect(); });
-
-                        }
-                        var cells = table.cells({ selected: true }).toArray();
-                        if (cells[0].length != 0) {
-                            $("#checkInDateinput").attr("value", table.column(cells[0][0].column).header().getAttribute("date"));
-                            var OutDate = parseDate(table.column(cells[0][cells[0].length - 1].column).header().getAttribute("date"));
-                            OutDate.setDate(OutDate.getDate() + 1)
-                            $("#checkOutDateinput").attr("value", OutDate.toLocaleDateString());
-                        } else {
-                            $("#checkInDateinput").attr("value", "-");
-                            $("#checkOutDateinput").attr("value", "-");
-                            $("#roomInput").attr("placeholder", "-");
-                        };
-                        return
-
-                    }
-                    else {
-                        if (curCell.node().classList.contains('no-select')) {
-
-
-                            return;
-                        }
-                        else {
-                            curCell.select();
-
-                        }
-                    }
-                    var rows = new Set();
-                    var selectedCells = table.cells({ selected: true });
-                    table.cells({ selected: true }).every(function () { rows.add(this.index().row); });
-                    if ((selectedCells.count() >= 2) && (rows.size == 1)) {
-                        columns = [];
-                        var row;
-                        selectedCells.toArray().forEach((list) => { list.forEach((obj) => { columns.push(obj.column); row = obj.row; }); });
-
-                        var leftBorder;
-                        var rightBorder;
-
-                        if (curCell.index().column > columns[0]) {
-                            leftBorder = columns[0];
-                            rightBorder = curCell.index().column;
-                        } else {
-                            leftBorder = curCell.index().column;
-                            rightBorder = columns[columns.length - 1];
-                        }
-
-                        // Clear previous selection
-
-                        selectedCells.deselect();
-                        // Select all cells between the first and last selected cells
-                        for (var column = leftBorder; column <= rightBorder; column++) {
-                            var cell = table.cell(row, column);
-                            if (cell.node().classList.contains('no-select')) {
-                                table.cells({ selected: true }).deselect();
-                                $("#checkInDateinput").attr("value", "-");
-                                $("#checkOutDateinput").attr("value", "-");
-                                $("#roomInput").attr("placeholder", "-");
-                                return;
-                            }
-                            else {
-                                table.cell(row, column).select();
-                            }
-
-                        }
-
-                    }
-
-                    var cells = table.cells({ selected: true }).toArray();
-                    if (cells[0].length != 0) {
-                        $("#checkInDateinput").attr("value", table.column(cells[0][0].column).header().getAttribute("date"));
-                        var OutDate = parseDate(table.column(cells[0][cells[0].length - 1].column).header().getAttribute("date"));
-                        OutDate.setDate(OutDate.getDate() + 1)
-                        $("#checkOutDateinput").attr("value", OutDate.toLocaleDateString());
-                    } else {
-                        $("#checkInDateinput").attr("value", "-");
-                        $("#checkOutDateinput").attr("value", "-");
-                        $("#roomInput").attr("placeholder", "-");
-
-                    };
-
-                });
-                table.off('select');
-                table.on('select', function (e, dt, type, indexes) {
-                    var rows = new Set();
-                    table.cells({ selected: true }).every(function () { rows.add(this.index().row); });
-                    if (rows.size > 1) {
-                        table.cells({ selected: true }).deselect();
-                        table.cell(indexes[0].row, indexes[0].column).select();
-                    }
-                    $("#roomInput").attr("placeholder", (table.cell(indexes[0].row, 2).data()));
-
-                });
                 
             },
             error: function (xhr, status, error) {
@@ -412,6 +274,145 @@ $(function () {
             }
         });
 
+
+        table = new DataTable('#roomsTable', {
+            data: [],
+            paging: false,
+            deferRender: true,
+            searching: false,
+            columns: cols,
+            scrollY: scrollYrooms,
+            select: {
+                style: 'multi',
+                selector: 'td:not(.no-select)',
+                items: 'cell'
+            },
+            dom: 'Bfrtip', // Добавляем кнопки в DOM
+            buttons: [
+                {
+                    text: 'Неделя назад',
+                    className: 'btn btn-primary clicked',
+                    action: function () {
+                        shiftWeekBackward();
+                    }
+                },
+                {
+                    text: 'Неделя вперёд',
+                    className: 'btn btn-primary clicked',
+                    action: function () {
+                        shiftWeekForward();
+                    }
+                }
+            ]
+        });
+        table.select.style('api');
+        table.off('click', 'td');
+        table.on('click', 'td', function (e) {
+            var curCell = table.cell(e.target);
+            if (curCell.selected()) {
+                curCell.deselect();
+                var cols = [];
+                var cols1 = [];
+                var selectedCells = table.cells({ selected: true });
+                selectedCells.every(function () { if (this.index().column < curCell.index().column) { cols.push(this.index()); } else { cols1.push(this.index()); }; });
+                if ((selectedCells.count() / 2) < (selectedCells.count() - cols.length)) {
+                    cols.forEach((el) => { table.cell(el.row, el.column).deselect(); });
+
+                }
+                else {
+                    cols1.forEach((el) => { table.cell(el.row, el.column).deselect(); });
+
+                }
+                var cells = table.cells({ selected: true }).toArray();
+                if (cells[0].length != 0) {
+                    $("#checkInDateinput").attr("value", table.column(cells[0][0].column).header().getAttribute("date"));
+                    var OutDate = parseDate(table.column(cells[0][cells[0].length - 1].column).header().getAttribute("date"));
+                    OutDate.setDate(OutDate.getDate() + 1)
+                    $("#checkOutDateinput").attr("value", OutDate.toLocaleDateString());
+                } else {
+                    $("#checkInDateinput").attr("value", "-");
+                    $("#checkOutDateinput").attr("value", "-");
+                    $("#roomInput").attr("placeholder", "-");
+                };
+                return
+
+            }
+            else {
+                if (curCell.node().classList.contains('no-select')) {
+
+
+                    return;
+                }
+                else {
+                    curCell.select();
+
+                }
+            }
+            var rows = new Set();
+            var selectedCells = table.cells({ selected: true });
+            table.cells({ selected: true }).every(function () { rows.add(this.index().row); });
+            if ((selectedCells.count() >= 2) && (rows.size == 1)) {
+                columns = [];
+                var row;
+                selectedCells.toArray().forEach((list) => { list.forEach((obj) => { columns.push(obj.column); row = obj.row; }); });
+
+                var leftBorder;
+                var rightBorder;
+
+                if (curCell.index().column > columns[0]) {
+                    leftBorder = columns[0];
+                    rightBorder = curCell.index().column;
+                } else {
+                    leftBorder = curCell.index().column;
+                    rightBorder = columns[columns.length - 1];
+                }
+
+                // Clear previous selection
+
+                selectedCells.deselect();
+                // Select all cells between the first and last selected cells
+                for (var column = leftBorder; column <= rightBorder; column++) {
+                    var cell = table.cell(row, column);
+                    if (cell.node().classList.contains('no-select')) {
+                        table.cells({ selected: true }).deselect();
+                        $("#checkInDateinput").attr("value", "-");
+                        $("#checkOutDateinput").attr("value", "-");
+                        $("#roomInput").attr("placeholder", "-");
+                        return;
+                    }
+                    else {
+                        table.cell(row, column).select();
+                    }
+
+                }
+
+            }
+
+            var cells = table.cells({ selected: true }).toArray();
+            if (cells[0].length != 0) {
+                $("#checkInDateinput").attr("value", table.column(cells[0][0].column).header().getAttribute("date"));
+                var OutDate = parseDate(table.column(cells[0][cells[0].length - 1].column).header().getAttribute("date"));
+                OutDate.setDate(OutDate.getDate() + 1)
+                $("#checkOutDateinput").attr("value", OutDate.toLocaleDateString());
+            } else {
+                $("#checkInDateinput").attr("value", "-");
+                $("#checkOutDateinput").attr("value", "-");
+                $("#roomInput").attr("placeholder", "-");
+
+            };
+
+        });
+        table.off('select');
+        table.on('select', function (e, dt, type, indexes) {
+            var rows = new Set();
+            table.cells({ selected: true }).every(function () { rows.add(this.index().row); });
+            if (rows.size > 1) {
+                table.cells({ selected: true }).deselect();
+                table.cell(indexes[0].row, indexes[0].column).select();
+            }
+            $("#roomInput").attr("placeholder", (table.cell(indexes[0].row, 2).data()));
+
+        });
         
     }
     $("#exampleModalCenter").on('shown.bs.modal', () => {

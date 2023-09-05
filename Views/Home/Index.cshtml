@@ -143,7 +143,7 @@
         </div>
     </div>
 
-    <table class="order-column row-border compact hover" id="customersTable">
+    <table class="order-column row-border hover" id="customersTable">
         <thead>
             <tr>
                 <th class="text-center" width="30">ID</th>
@@ -169,7 +169,6 @@
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
 
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
-    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
@@ -179,6 +178,7 @@
         let urlCreateClient = '@Url.Action("CreateReservation", "Home")'
         let urlDelite = '@Url.Action("DeleteReservation","Home")'+'/'
         let scrollYcur = 500
+        let scrollYrooms = 350
         let dtColumns = [
             { data: 'Id' },
             {

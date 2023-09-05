@@ -4,5 +4,63 @@
 
 <main>
     <h1>Номера</h1>
+    <div class="row g-3 mt-3 mb-3">
+        <div class="col">
+            <select class="form-select" aria-label="room type" id="roomTypeFilter">
+                <option selected>Тип комнаты</option>
+                @foreach (var roomType in ViewBag.RoomTypes)
+                {
+                    <option value="@roomType">@roomType</option>
+                }
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-select" aria-label="room capacity" id="roomCapsFilter">
+                <option selected>Вместимость комнат</option>
+                @foreach (var el in ViewBag.Caps)
+                {
+                    <option value="@el">@el</option>
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <table id="roomsTable" class=" cell-border" width="100%">
+            <thead>
+                <tr>
+
+                    <th rowspan="2" width=150>Тип</th>
+                    <th rowspan="2">Вместимость</th>
+                    <th rowspan="2">Номер</th>
+
+                </tr>
+
+            </thead>
+        </table>
+    </div>
+    
+    @section scripts {
+        <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
+        <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+
+        <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+        <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/sl-1.7.0/datatables.min.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
+        <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/b-2.4.1/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
+
+        <script>
+        let url = '@Url.Action("GetReservations", "Home")'
+        let scrollYrooms = 500
+
+
+
+        const rooms = JSON.parse('@Html.Raw(ViewBag.Rooms)');
+        const clients = JSON.parse('@Html.Raw(ViewBag.Clients)');
+        </script>
+        @Scripts.Render("~/Scripts/roomsTable.js")
+
+    }
+
 </main>
 

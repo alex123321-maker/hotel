@@ -16,7 +16,6 @@ namespace hotel.Controllers
         public ActionResult Index()
         {
             string userId = User.Identity.GetUserId();
-            ViewBag.Discounts = JsonConvert.SerializeObject(db.Discounts.ToList());
             // Теперь у вас есть ID текущего авторизованного пользователя
             ViewBag.CurrentUserId = userId;
             ViewBag.ActiveTab = "bookings";
@@ -32,7 +31,7 @@ namespace hotel.Controllers
             ViewBag.Caps = caps;
 
             ViewBag.Rooms = JsonConvert.SerializeObject(db.Rooms.ToList());
-
+            ViewBag.Discounts = JsonConvert.SerializeObject(db.Discounts.ToList());
             ViewBag.Clients = JsonConvert.SerializeObject(db.Customers.ToList());
 
             return View();
@@ -146,6 +145,7 @@ namespace hotel.Controllers
 
         public ActionResult Services()
         {
+           
             ViewBag.ActiveTab = "services";
             return View();
         }
@@ -159,6 +159,20 @@ namespace hotel.Controllers
 
         public ActionResult Rooms()
         {
+            var RoomTypes = db.RoomTypes.ToList();
+            HashSet<string> types = new HashSet<string>();
+            HashSet<int> caps = new HashSet<int>();
+            foreach (var RoomType in RoomTypes)
+            {
+                types.Add(RoomType.Type);
+                caps.Add(RoomType.Capacity);
+            }
+            ViewBag.RoomTypes = types;
+            ViewBag.Caps = caps;
+
+
+            ViewBag.Rooms = JsonConvert.SerializeObject(db.Rooms.ToList());
+            ViewBag.Clients = JsonConvert.SerializeObject(db.Customers.ToList());
             ViewBag.ActiveTab = "rooms";
 
             return View();
