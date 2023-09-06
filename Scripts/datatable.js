@@ -79,7 +79,7 @@ $(function () {
             Phone: $("#Phone").val(),
             Prefers: $("#exampleFormControlTextarea1").val()
         };
-        console.log(formData);
+        
         // Отправка данных на сервер
         $.ajax({
             url: urlCreateClient,
@@ -97,8 +97,7 @@ $(function () {
                 showToast("Клиент успешно добавлен", true);
             },
             error: function (xhr, status, error) {
-                // Обработка ошибки
-                showToast(error, false);
+                
                 console.error("Произошла ошибка:", error);
             }
         });
@@ -164,7 +163,6 @@ function deleteClient(id) {
         dataType: 'json',
         success: function (response) {
             if (response.success) {
-                console.log("Запись успешно удалена:", response.message);
                 getClients(); // Обновляем таблицу после удаления
                 showToast("Запись успешно удалена.",true);
             } else {
@@ -178,43 +176,6 @@ function deleteClient(id) {
     });
 }
 
-function showToast(message, success) {
-    const toastPlacement = document.getElementById("toastPlacement");
-    const toast = toastPlacement.querySelector(".toast");
-
-    // Очищаем классы перед добавлением новых
-    toast.classList.remove("bg-success", "bg-danger", "text-white");
-
-    const toastheader = toast.querySelector(".toast-header");
-    const toastBody = toast.querySelector(".toast-body");
-
-    // Очищаем содержимое заголовка перед добавлением нового
-    toastheader.innerHTML = "";
-
-    if (success) {
-        toast.classList.add("bg-success", "text-white");
-
-        var strongElement = document.createElement("strong");
-        strongElement.className = "me-auto";
-        strongElement.textContent = "Успешно";
-
-        toastheader.appendChild(strongElement);
-    } else {
-        toast.classList.add("bg-danger", "text-white");
-
-        var strongElement = document.createElement("strong");
-        strongElement.className = "me-auto";
-        strongElement.textContent = "Ошибка";
-
-        toastheader.appendChild(strongElement);
-    }
-
-    // Устанавливаем текст в теле тоста
-    toastBody.textContent = message;
-
-    const bsToast = new bootstrap.Toast(toast); // Инициализируем тост
-    bsToast.show(); // Показываем тост
-}
 
 function filterReserv(filterStartDate) {
         var tableRows = $('#customersTable tbody tr');

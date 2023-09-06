@@ -106,3 +106,8 @@ td {
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+.editable-text {
+    width: auto; /* Замените 100px на желаемую ширину */
+    padding: 0 5px 0 5px;
+    margin: 0 5px 0 5px;
+}

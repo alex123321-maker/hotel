@@ -1,0 +1,61 @@
+﻿
+
+<div class="col ">
+    <div class="row mb-3">
+        <h2 class="text-center">Цены за дни недели (от изначальной цены)</h2>
+    </div>
+    @foreach (var pricingModel in ViewBag.PricingModel)
+    {
+        <div class="row ">
+            <div class="col text-center p-2">@pricingModel.day_of_week</div>
+            <div class="col d-flex border-start border-bottom-0 border-black  text-start p-2">
+                <div class="editable-text day-of-week" id="@pricingModel.day_of_week" contentEditable="true">@(pricingModel.multiplier*100)</div>
+                <span>%</span>
+            </div>
+            
+        </div>
+    }
+<script>
+    $(document).ready(function () {
+        var spanValue1 = document.getElementsByClassName("day-of-week");
+
+        for (let item of spanValue1) {
+            item.addEventListener("blur", function () {
+                // Обработчик для сохранения изменений в поле "Дни"
+                var newValue = item.textContent;
+                var id = item.id; // Получите соответствующий ID скидки
+                
+                updateDaysPricing(id, newValue);
+            });
+        }
+        
+
+
+
+        function updateDaysPricing(Id, newValue) {
+            var formData = {
+                id: Id,
+                newValue: newValue/100
+            };
+
+            $.ajax({
+                url: '@Url.Action("UpdatePricing", "home")',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message, true);
+                    }
+                    else {
+                        showToast(response.message, false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
+    });
+</script>
+
+</div>

@@ -1,9 +1,93 @@
 ﻿@{
     ViewBag.Title = "Скидки";
 }
+@Html.Partial("_PartialToast")
 
 <main>
     <h1>Скидки</h1>
+    <div class="row">
+        <div class="col text-center">
+            <h1>Изначальная цена номера</h1>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var group in ViewBag.RoomTypeGroups)
+        {
+            <div class="col text-center m-3 pt-3 pb-3 rounded-2" style="background-color: lightgray">
+                <div class="row d-flex align-items-center">
+                    <div class="col ">@group.Type</div>
+                    <div class="col border border-black border-bottom-0 border-top-0">
+                        @for (int i = 0; i < group.Capacities.Count; i++)
+                        {
+                            <div class="m-2">@group.Capacities[i] <span>-мест</span></div>
+                        }
+                    </div>
+                    <div class="col">
+                        @for (int i = 0; i < group.Prices.Count; i++)
+                        {
+                            <div class="d-flex m-2 prices"><div class="me-2 prices" contentEditable="true" data-type="@group.Type" data-cap="@group.Capacities[i]">@group.Prices[i]</div>  <span>₽</span></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mt-3">
+        <div class="col border-end border-black">
+            @Html.Partial("_PartialPricing")
+
+        </div>
+        <div class="col">
+            @Html.Partial("_PartialDiscount")
+        </div>
+    </div>
 </main>
+
+@section scripts{
+    <script>
+    $(document).ready(function () {
+        var spanValue1 = document.getElementsByClassName("prices");
+
+        for (let item of spanValue1) {
+            item.addEventListener("blur", function () {
+
+                var newValue = item.textContent;
+                var cap = item.getAttribute("data-cap");
+                var type = item.getAttribute("data-type");
+                updatePricing(type, cap, newValue);
+            });
+        }
+
+
+
+
+        function updatePricing(type, cap, newValue) {
+            var formData = {
+                type:type,
+                cap: cap,
+                newValue: newValue
+            };
+
+            $.ajax({
+                url: '@Url.Action("UpdateRoomPricing", "home")',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message,true);
+                    }
+                    else {
+                        showToast(response.message, false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
+    });
+    </script>
+}
 
 

@@ -499,6 +499,9 @@
     <Content Include="Views\Home\Services.cshtml" />
     <Content Include="Views\Home\Discount.cshtml" />
     <Content Include="Views\Home\Rooms.cshtml" />
+    <Content Include="Views\Home\_PartialPricing.cshtml" />
+    <Content Include="Views\Home\_PartialDiscount.cshtml" />
+    <Content Include="Views\Home\_PartialToast.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

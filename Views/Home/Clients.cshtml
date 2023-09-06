@@ -1,18 +1,8 @@
 ﻿@{
     ViewBag.Title = "Клиенты";
 }
-<div aria-live="assertive" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
-    <div class="toast-container position-fixed p-3 end-0 " id="toastPlacement">
-        <div class="toast  text-white">
-            <div class="toast-header ">
+@Html.Partial("_PartialToast")
 
-            </div>
-            <div class="toast-body">
-
-            </div>
-        </div>
-    </div>
-</div>
 <main>
 
     <h1>Управление клиентами</h1>
@@ -106,13 +96,14 @@
     </table>
 
 </main>
+
 @section scripts {
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
 
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/fc-4.3.0/fh-3.4.0/sc-2.2.0/sl-1.7.0/datatables.min.js"></script>
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/sync.css' rel='stylesheet'>
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
-<script>
+    <script>
         let scrollYcur = 600
         let url = '@Url.Action("GetClientsData", "Home")'
         let urlCreateClient = '@Url.Action("CreateClient", "Home")'
@@ -128,8 +119,8 @@
             { data: 'Passportnumber' },
             { data: 'Prefers' }
     ]
-    
-    
-</script>
+
+
+    </script>
     @Scripts.Render("~/Scripts/datatable.js")
 }

@@ -1,0 +1,55 @@
+﻿<div aria-live="assertive" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+    <div class="toast-container position-fixed p-3 end-0 " id="toastPlacement">
+        <div class="toast  text-white">
+            <div class="toast-header ">
+
+            </div>
+            <div class="toast-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showToast(message, success) {
+        const toastPlacement = document.getElementById("toastPlacement");
+        const toast = toastPlacement.querySelector(".toast");
+
+        // Очищаем классы перед добавлением новых
+        toast.classList.remove("bg-success", "bg-danger", "text-white");
+
+        const toastheader = toast.querySelector(".toast-header");
+        const toastBody = toast.querySelector(".toast-body");
+
+        // Очищаем содержимое заголовка перед добавлением нового
+        toastheader.innerHTML = "";
+
+        if (success) {
+            toast.classList.add("bg-success", "text-white");
+
+            var strongElement = document.createElement("strong");
+            strongElement.className = "me-auto";
+            strongElement.textContent = "Успешно";
+
+            toastheader.appendChild(strongElement);
+        } else {
+            toast.classList.add("bg-danger", "text-white");
+
+            var strongElement = document.createElement("strong");
+            strongElement.className = "me-auto";
+            strongElement.textContent = "Ошибка";
+
+            toastheader.appendChild(strongElement);
+        }
+
+        // Устанавливаем текст в теле тоста
+        toastBody.textContent = message;
+
+        const bsToast = new bootstrap.Toast(toast); // Инициализируем тост
+        bsToast.show(); // Показываем тост
+    }
+
+
+</script>
+    

@@ -1,0 +1,194 @@
+﻿<div class="col">
+    <div class="row mb-3">
+
+        <h2 class="text-center">Скидка за длительность пребывания</h2>
+    </div>
+
+    <div id="container"></div>
+
+    <form id="add-discount-form">
+        <div class="row mt-5">
+            <div class="col">
+                
+                <input type="number" class="form-control" placeholder="Дни:" id="days" name="days" required>
+            </div>
+            <div class="col">
+                
+                <input type="number" class="form-control" placeholder="Скидка:" id="amount" name="amount" required>
+            </div>
+            <div class="col">
+                
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+        
+    </form>
+
+</div>
+<script>
+    $(document).ready(function () {
+        GetDiscount();
+
+
+
+
+
+        function GetDiscount() {
+            $.ajax({
+                url: '@Url.Action("GetDiscount", "home")',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    var jsonData = JSON.parse(response);
+                    var cont = document.getElementById('container');
+                    cont.innerHTML = "";
+                    jsonData.forEach(el => {
+                        var row = document.createElement("div");
+                        row.classList.add("row");
+
+                        // Создаем первый дочерний элемент и добавляем ему классы и текст
+                        var col1 = document.createElement("div");
+                        var spanValue1 = document.createElement("div");
+                        var spanOption1 = document.createElement("div");
+                        col1.classList.add("col", "text-center", "p-2", "no-select","d-flex");
+
+                        spanValue1.textContent = `${el.Days}`;
+                        spanOption1.textContent = ` суток`;
+                        spanValue1.classList.add("editable-text");
+
+                        col1.appendChild(spanValue1);
+                        col1.appendChild(spanOption1);
+
+                        // Создаем второй дочерний элемент и добавляем ему классы и текст
+                        var col2 = document.createElement("div");
+                        var spanValue2 = document.createElement("div");
+                        var spanOption2 = document.createElement("div");
+                        col2.classList.add("col", "text-center", "border-start", "border-bottom-0", "border-black", "p-2", "no-select", "d-flex");
+
+                        spanValue2.textContent = `${el.Amount}`;
+                        spanOption2.textContent = ` %`;
+                        spanValue2.classList.add("editable-text");
+
+                        col2.appendChild(spanValue2);
+                        col2.appendChild(spanOption2);
+
+                        // Создаем третий дочерний элемент (кнопку) и добавляем ей классы, текст и атрибут data-id
+                        var col3 = document.createElement("div");
+                        col3.classList.add("col");
+                        var button = document.createElement("button");
+                        button.classList.add("btn", "btn-sm", "btn-primary", "edit-discount");
+                        button.textContent = "Удалить";
+                        button.setAttribute("data-id", `${el.Id}`);
+
+                        // Добавляем обработчики событий для редактирования
+                        spanValue1.setAttribute("contentEditable", true);
+                        spanValue2.setAttribute("contentEditable", true);
+
+                        spanValue1.addEventListener("blur", function () {
+                            // Обработчик для сохранения изменений в поле "Дни"
+                            var newDaysValue = spanValue1.textContent;
+                            var discountId = el.Id; // Получите соответствующий ID скидки
+                            updateDiscountField(discountId, "Days", newDaysValue);
+                        });
+
+                        spanValue2.addEventListener("blur", function () {
+                            // Обработчик для сохранения изменений в поле "Скидка"
+                            var newAmountValue = spanValue2.textContent;
+                            var discountId = el.Id; // Получите соответствующий ID скидки
+                            updateDiscountField(discountId, "Amount", newAmountValue);
+                        });
+
+                        // Добавляем дочерние элементы в родительский элемент
+                        col3.appendChild(button);
+                        row.appendChild(col1);
+                        row.appendChild(col2);
+                        row.appendChild(col3);
+                        cont.appendChild(row);
+                    });
+
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
+
+        function updateDiscountField(discountId, field, newValue) {
+            var formData = {
+                id: discountId,
+                field: field,
+                newValue: newValue
+            };
+
+            $.ajax({
+                url: '@Url.Action("UpdateDiscountField", "home")',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message, true);
+                    }
+                    else {
+                        showToast(response.message, false);
+                    }
+                                    },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
+
+
+
+        // Обработчик для формы добавления скидки
+        $("#add-discount-form").submit(function (e) {
+            e.preventDefault();
+            var formData = Object();
+            formData.Days = $("#days").val();
+            formData.Amount = $("#amount").val();
+            $.ajax({
+                url: '@Url.Action("AddDiscount","Home")',
+                type: 'POST',
+                data: JSON.stringify(formData), // Отправляем данные как JSON
+                contentType: 'application/json', // Указываем, что отправляем JSON
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message, true);
+                    }
+                    else {
+                        showToast(response.message, false);
+                    }
+                    GetDiscount();
+                },
+                error: function (xhr, status, error) {
+
+                    console.error("Произошла ошибка:", error);
+                }
+            });
+
+        });
+        $("#container").on("click", ".edit-discount", function () {
+            var discountId = $(this).data("id");
+            $.ajax({
+                url: '@Url.Action("DeleteDiscount", "home")/' + discountId,
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+
+                    if (response.success) {
+                        GetDiscount();
+                        showToast(response.message, true);
+                    } else {
+                        showToast(response.message, false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        });
+    });
+
+
+
+
+</script>
