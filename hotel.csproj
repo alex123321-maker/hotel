@@ -167,19 +167,18 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202308220840072_Adder.cs" />
-    <Compile Include="Migrations\202308220840072_Adder.designer.cs">
-      <DependentUpon>202308220840072_Adder.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CustomerModels.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModelsContext.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PricingModel.cs" />
     <Compile Include="Models\ReservationModel.cs" />
+    <Compile Include="Models\ReservationServiceModel.cs" />
+    <Compile Include="Models\RoomCapacityModel.cs" />
     <Compile Include="Models\RoomModel.cs" />
     <Compile Include="Models\RoomTypeModel.cs" />
     <Compile Include="Models\ServiceModel.cs" />
@@ -532,11 +531,6 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202308220840072_Adder.resx">
-      <DependentUpon>202308220840072_Adder.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

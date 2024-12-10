@@ -32,15 +32,27 @@ namespace hotel.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
 
+            // Определение ключей для IdentityUserRole
             modelBuilder.Entity<IdentityUserRole>()
                 .HasKey(r => new { r.UserId, r.RoleId })
                 .ToTable("AspNetUserRoles");
 
+            // Определение ключей для IdentityUserLogin
             modelBuilder.Entity<IdentityUserLogin>()
-                        .HasKey(l => new { l.LoginProvider, l.ProviderKey, l.UserId })
-                        .ToTable("AspNetUserLogins");
+                .HasKey(l => new { l.LoginProvider, l.ProviderKey, l.UserId })
+                .ToTable("AspNetUserLogins");
+
+            // Убедитесь, что другие таблицы Identity настроены
+            modelBuilder.Entity<IdentityUserClaim>()
+                .ToTable("AspNetUserClaims");
+
+            modelBuilder.Entity<IdentityRole>()
+                .ToTable("AspNetRoles");
+
+            base.OnModelCreating(modelBuilder);
+
+
         }
 
     }

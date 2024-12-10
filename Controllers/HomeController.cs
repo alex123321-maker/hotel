@@ -131,7 +131,7 @@ namespace hotel.Controllers
         }
 
         [HttpPost] 
-        public JsonResult CreateClient(CustomerModels customer) // Принимайте объект Customer как параметр
+        public JsonResult CreateClient(CustomerModel customer) // Принимайте объект Customer как параметр
         {
             try
             {

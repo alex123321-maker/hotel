@@ -10,11 +10,14 @@ namespace hotel.Models
     public class RoomModel
     {
         [Key]
-        public int RoomNumber { get; set; }
-        
-        public int RoomTypeId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-        [ForeignKey("RoomTypeId")]
+        public int RoomTypeId { get; set; }
+        public int CapacityId { get; set; }
+        public decimal Price { get; set; }
+
         public virtual RoomTypeModel RoomType { get; set; }
+        public virtual RoomCapacityModel Capacity { get; set; }
     }
 }

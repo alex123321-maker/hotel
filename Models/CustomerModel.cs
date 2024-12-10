@@ -6,7 +6,7 @@ using System.Web;
 
 namespace hotel.Models
 {
-    public class CustomerModels
+    public class CustomerModel
     {
         [Key]
         public int Id{ get; set; } 
