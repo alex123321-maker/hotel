@@ -1,0 +1,165 @@
+﻿<main>
+    <div class="m-4">
+        <h1>Услуги</h1>
+    </div>
+    <section class="row w-75 m-4 pt-4 pb-4 d-flex">
+        <div class="col-6">
+            <div class="input-group">
+                <input type="search" class="form-control" id="searchInput" placeholder="Найти по названию" aria-label="Search" aria-describedby="search-addon">
+                <button id="searchButton" class="btn btn-primary z-0">Поиск</button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary col-2" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+            Добавить
+        </button>
+    </section>
+
+    <div id="servicesContainer">
+        @foreach (var el in ViewBag.Services)
+        {
+            <div class="container px-4">
+                <div class="w-100 row g-2">
+                    <div class="bg-success-subtle m-3 p-3 w-25 h-25 col border border-black rounded-1 text-center">
+                        <h2>@el.Title</h2>
+                        <p>@el.Description</p>
+                        <div class="row">
+                            <button type="button" class="col m-4 btn btn-primary editServiceButton" data-id="@el.Id" data-title="@el.Title" data-description="@el.Description" data-price="@el.Price">
+                                Изменить
+                            </button>
+                            <button type="button" class="col m-4 btn btn-danger deleteServiceButton" data-id="@el.Id">
+                                Удалить
+                            </button>
+                            <h3 class="col m-3 p-3">@el.Price <span>₽</span></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+<!-- Модальное окно для добавления услуги -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel">Добавить услугу</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addServiceForm">
+                    <div class="mb-3">
+                        <label for="serviceTitle" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="serviceTitle" name="Title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceDescription" class="form-label">Описание</label>
+                        <textarea class="form-control" id="serviceDescription" name="Description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="servicePrice" class="form-label">Цена</label>
+                        <input type="number" class="form-control" id="servicePrice" name="Price" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Поиск услуг
+        $('#searchButton').on('click', function () {
+            const query = $('#searchInput').val();
+            $.get('/Services/SearchServices', { title: query }, function (data) {
+                $('#servicesContainer').empty();
+                data.forEach(service => {
+                    $('#servicesContainer').append(`
+                    <div class="container px-4">
+                        <div class="w-100 row g-2">
+                            <div class="bg-success-subtle m-3 p-3 w-25 h-25 col border border-black rounded-1 text-center">
+                                <h2>${service.Title}</h2>
+                                <p>${service.Description}</p>
+                                <div class="row">
+                                    <button class="col m-4 btn btn-primary editServiceButton" data-id="${service.Id}" data-title="${service.Title}" data-description="${service.Description}" data-price="${service.Price}">Изменить</button>
+                                    <button class="col m-4 btn btn-danger deleteServiceButton" data-id="${service.Id}">Удалить</button>
+                                    <h3 class="col m-3 p-3">${service.Price} <span>₽</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                });
+            });
+        });
+
+        // Добавление услуги
+        $('#addServiceForm').on('submit', function (e) {
+            e.preventDefault();
+            const data = {
+                Title: $('#serviceTitle').val(),
+                Description: $('#serviceDescription').val(),
+                Price: $('#servicePrice').val()
+            };
+
+            $.post('/Services/AddService', data, function (response) {
+                if (response.success) {
+                    location.reload(); // Перезагрузка страницы
+                } else {
+                    alert(response.message);
+                }
+            });
+        });
+
+        // Удаление услуги
+        $(document).on('click', '.deleteServiceButton', function () {
+            const serviceId = $(this).data('id');
+            $.post('/Services/DeleteService', { id: serviceId }, function (response) {
+                if (response.success) {
+                    location.reload(); // Перезагрузка страницы
+                } else {
+                    alert(response.message);
+                }
+            });
+        });
+
+        // Изменение услуги
+        $(document).on('click', '.editServiceButton', function () {
+            const serviceId = $(this).data('id');
+            const title = $(this).data('title');
+            const description = $(this).data('description');
+            const price = $(this).data('price');
+
+            // Открываем модальное окно изменения услуги
+            $('#serviceTitle').val(title);
+            $('#serviceDescription').val(description);
+            $('#servicePrice').val(price);
+
+            $('#addServiceModal').modal('show');
+
+            // Перехват отправки формы
+            $('#addServiceForm').off('submit').on('submit', function (e) {
+                e.preventDefault();
+
+                const updatedData = {
+                    Id: serviceId,
+                    Title: $('#serviceTitle').val(),
+                    Description: $('#serviceDescription').val(),
+                    Price: $('#servicePrice').val()
+                };
+
+                $.post('/Services/UpdateService', updatedData, function (response) {
+                    if (response.success) {
+                        location.reload(); // Перезагрузка страницы
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+    });
+
+
+</script>

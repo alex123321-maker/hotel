@@ -65,9 +65,10 @@
         function updatePricing(type, cap, newValue) {
             var formData = {
                 type:type,
-                cap: cap,
-                newValue: newValue
+                cap: parseInt(cap),
+                newValue: parseInt(newValue)
             };
+            console.log(formData)
 
             $.ajax({
                 url: '@Url.Action("UpdateRoomPricing", "home")',

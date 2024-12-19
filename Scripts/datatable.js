@@ -1,6 +1,11 @@
 ﻿
 var dataTableInstance;
 const currentDate = new Date();
+
+
+
+
+
 $(function () {
 
     dataTableInstance = $('#customersTable').DataTable({

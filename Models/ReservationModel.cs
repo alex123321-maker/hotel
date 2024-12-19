@@ -13,8 +13,7 @@ namespace hotel.Models
         public int CustomerId { get; set; }
         public int RoomId { get; set; }
         public string AdminId { get; set; }
-        public int DiscountId { get; set; }
-        public string StatusId { get; set; }
+        public int? DiscountId { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public DateTime? CreatedDate { get; set; }

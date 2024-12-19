@@ -12,8 +12,15 @@ namespace hotel.Models
         public int ReservationId { get; set; }
         public int ServiceId { get; set; }
 
+        public bool Complited { get; set; }
+
         public virtual ReservationModel Reservation { get; set; }
         public virtual ServiceModel Service { get; set; }
+
+        public ReservationServiceModel()
+        {
+            Complited = false;
+        }
     }
 
 }
